@@ -1,0 +1,1 @@
+[18-Feb-2014 12:46:54 America/Chicago] PHP Warning:  mysql_connect(): Access denied for user 'vietscie'@'localhost' (using password: NO) in /home/vietscie/public_html/api/paris30/glocator/phpsqlsearch_genxml.php on line 15
