@@ -1,0 +1,284 @@
+﻿<!DOCTYPE html>
+<html lang="fr">
+<head>
+	<meta charset="UTF-8" />
+	<meta name="author" content="Paris Descartes (2013-2014), Paris 3.0 (L2N1, L2N2, L2O, L2P)" />
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	
+	<title>Paris 3.0</title>
+	
+	<link rel="stylesheet" href="http://code.jquery.com/mobile/1.3.1/jquery.mobile-1.3.1.min.css" />
+	
+	<link rel="stylesheet" href="css/paris3.0.css"/>	
+	<link rel="stylesheet" href="css/settings.css" />
+	<link rel="stylesheet" href="css/plan.css" />
+
+	<script type="text/javascript" src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
+	<script type="text/javascript" src="http://code.jquery.com/mobile/1.3.1/jquery.mobile-1.3.1.min.js"></script>
+	<script type="text/javascript" src="http://jquery-ui-map.googlecode.com/svn/trunk/ui/min/jquery.ui.map.full.min.js"></script> 
+	<script type="text/javascript" src="http://jquery-ui-map.googlecode.com/svn/trunk/ui/jquery.ui.map.extensions.js"></script>
+	<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=true&libraries=geometry"></script>
+	<script type="text/javascript" src="https://jqueryjs.googlecode.com/svn-history/r6125/trunk/plugins/cookie/jquery.cookie.js"></script>
+	
+	<script type="text/javascript" src="js/paris3.0.js"></script>
+	<script type="text/javascript" src="js/jquery.zoom.js"></script>
+	
+	<script type="text/javascript">
+		$(document).ready(function(){
+			init();	
+			setSwipe("page-home");
+			setSwipe("page-map-classic");
+			setSwipe("page-list");				
+			$('#ex3').zoom({ on:'click' });	
+		});
+
+		$(document).on('pageshow', '#page-map-interactive', function() { 
+			getMapInteractive();
+		});
+		
+
+
+		//Background loading
+		function init(){
+			//Set language with latest user settings
+			($.cookie("lang")=="EN" ? setLang("EN") : setLang("FR"))		
+			//$('[data-role=content]').html('My super "Content"');
+		}
+				
+	</script>
+
+</head>
+
+<body>
+
+
+<!---------------------------------- Home Page --------------------------------------->
+<div data-role="page" id="page-home" data-theme="d">
+
+	<!----------- Header ----------->
+    <div id="header" data-role="header" data-theme="a" data-position="fixed">
+        <a id="bars-button" href="#menu-panel"><img src="img/ic_launcher.png" width="36px" height="36px" /></a>
+        <h1>Paris 3.0</h1>
+    </div>
+	<!----------- /Header ----------->
+	
+	<!-------- Left Menu ----------->
+    <div data-role="panel" id="menu-panel" data-theme="a" data-display="overlay" data-position="left">
+        <div data-role="controlgroup" data-corners="false">
+				<ul data-role="listview" data-theme="a" data-divider-theme="a">			
+					<li>
+						<a href="#page-home" data-rel="page" id="menu-home" target="_parent">Home</a>
+					</li>				
+					<li>
+						<a href="#page-map-interactive" data-rel="page" id="menu-map-interactive" target="_parent">Map - Interactive</a>
+					</li>
+					<li>
+						<a href="#page-map-classic" data-rel="page" id="menu-map-classic">Map - Classic</a>						
+					</li>					
+					<li>
+						<a href="#page-list" data-rel="page" id="menu-list">List</a>
+					</li>
+					<li>
+						<a href="#pop-lang" data-rel="popup" id="menu-lang">Language</a>
+					</li>
+					<li>
+						<a href="#pop-about" data-rel="popup" id="menu-about">About</a>
+					</li>
+				</ul>	
+        </div>
+    </div>
+	<!-------- /Left Menu ----------->
+	
+    <!-------- Center Content -------->	
+    <div id="content">
+		
+		<div id="home_img"><img src="img/map/parisgo.png"  width="90%"></div>
+		
+		<div data-role="popup" id="pop-lang"></div>	
+		<div data-role="popup" id="pop-about" data-position-to="window"></div>
+		
+ 	</div>
+	<!-------- /Center Content -------->
+    
+</div>
+<!---------------------------------- /Home Page --------------------------------------->	
+
+
+
+
+<!---------------------------------- Map :: Interactive Page --------------------------------------->
+<div data-role="page" id="page-map-interactive" data-theme="d">
+
+	<!----------- Header ----------->
+    <div id="header" data-role="header" data-theme="a" data-position="fixed">
+        <a id="bars-button" href="#menu-panel"><img src="img/ic_launcher.png" width="36px" height="36px" /></a>
+        <h1>Paris 3.0</h1>
+    </div>
+	<!----------- /Header ----------->
+	
+	<!-------- Left Menu ----------->
+    <div data-role="panel" id="menu-panel" data-theme="a" data-display="overlay" data-position="left">
+        <div data-role="controlgroup" data-corners="false">
+				<ul data-role="listview" data-theme="a" data-divider-theme="a">			
+					<li>
+						<a href="#page-home" data-rel="page" id="menu-home" target="_parent">Home</a>
+					</li>				
+					<li>
+						<a href="#page-map-interactive" data-rel="page" id="menu-map-interactive" target="_parent">Map - Interactive</a>
+					</li>
+					<li>
+						<a href="#page-map-classic" data-rel="page" id="menu-map-classic">Map - Classic</a>						
+					</li>					
+					<li>
+						<a href="#page-list" data-rel="page" id="menu-list">List</a>
+					</li>
+					<li>
+						<a href="#pop-lang" data-rel="popup" id="menu-lang">Language</a>
+					</li>
+					<li>
+						<a href="#pop-about" data-rel="popup" id="menu-about">About</a>
+					</li>
+				</ul>
+
+	
+        </div>
+    </div>
+	<!-------- /Left Menu ----------->
+	
+    <!-------- Center Content -------->	
+    <div id="content">
+		<div id="map_canvas"></div>
+			
+		<select onchange="goTag(this)">			
+			<option value="all" selected>All</option>
+			<option>Autolib</option>
+			<option>Bus</option>
+			<option>Métro</option>
+			<option>RER</option>
+			<option>Tramway</option>
+			<option>Velib</option>
+		</select>
+		
+		<div data-role="popup" id="pop-lang"></div>	
+		<div data-role="popup" id="pop-about" data-position-to="window"></div>
+		
+ 	</div>
+	<!-------- /Center Content -------->
+    
+</div>
+<!---------------------------------- /Map :: Interactive Page --------------------------------------->	
+
+
+
+
+
+<!---------------------------------- Map :: Classic Page --------------------------------------->
+<div data-role="page" id="page-map-classic" data-theme="d">
+
+	<!----------- Header ----------->
+    <div id="header" data-role="header" data-theme="a" data-position="fixed">
+        <a id="bars-button" href="#menu-panel"><img src="img/ic_launcher.png" width="36px" height="36px" /></a>
+        <h1>Paris 3.0</h1>
+    </div>
+	<!----------- /Header ----------->
+	
+	<!-------- Left Menu ----------->
+    <div data-role="panel" id="menu-panel" data-theme="a" data-display="overlay" data-position="left">
+        <div data-role="controlgroup" data-corners="false">
+				<ul data-role="listview" data-theme="a" data-divider-theme="a">			
+					<li>
+						<a href="#page-home" data-rel="page" id="menu-home" target="_parent">Home</a>
+					</li>				
+					<li>
+						<a href="#page-map-interactive" data-rel="page" id="menu-map-interactive" target="_parent">Map - Interactive</a>
+					</li>
+					<li>
+						<a href="#page-map-classic" data-rel="page" id="menu-map-classic">Map - Classic</a>						
+					</li>					
+					<li>
+						<a href="#page-list" data-rel="page" id="menu-list">List</a>
+					</li>
+					<li>
+						<a href="#pop-lang" data-rel="popup" id="menu-lang">Language</a>
+					</li>
+					<li>
+						<a href="#pop-about" data-rel="popup" id="menu-about">About</a>
+					</li>
+				</ul>	
+        </div>
+    </div>
+	<!-------- /Left Menu ----------->
+	
+    <!-------- Center Content -------->	
+    <div id="content">
+		<span class="zoom" id="ex3">
+		<img src="img/map/map-classic-metro-tram-rer.jpg" />
+		</span>	
+		
+		<div data-role="popup" id="pop-lang"></div>	
+		<div data-role="popup" id="pop-about" data-position-to="window"></div>
+		
+ 	</div>
+	<!-------- /Center Content -------->
+    
+</div>
+<!---------------------------------- /Map :: Classic Page --------------------------------------->	
+
+
+
+
+
+<!---------------------------------- List Page --------------------------------------->
+<div data-role="page" id="page-list" data-theme="d">
+
+	<!----------- Header ----------->
+    <div id="header" data-role="header" data-theme="a" data-position="fixed">
+        <a id="bars-button" href="#menu-panel"><img src="img/ic_launcher.png" width="36px" height="36px" /></a>
+        <h1>Paris 3.0</h1>
+    </div>
+	<!----------- /Header ----------->
+	
+	<!-------- Left Menu ----------->
+    <div data-role="panel" id="menu-panel" data-theme="a" data-display="overlay" data-position="left">
+        <div data-role="controlgroup" data-corners="false">
+				<ul data-role="listview" data-theme="a" data-divider-theme="a">			
+					<li>
+						<a href="#page-home" data-rel="page" id="menu-home" target="_parent">Home</a>
+					</li>				
+					<li>
+						<a href="#page-map-interactive" data-rel="page" id="menu-map-interactive" target="_parent">Map - Interactive</a>
+					</li>
+					<li>
+						<a href="#page-map-classic" data-rel="page" id="menu-map-classic">Map - Classic</a>						
+					</li>					
+					<li>
+						<a href="#page-list" data-rel="page" id="menu-list">List</a>
+					</li>
+					<li>
+						<a href="#pop-lang" data-rel="popup" id="menu-lang">Language</a>
+					</li>
+					<li>
+						<a href="#pop-about" data-rel="popup" id="menu-about">About</a>
+					</li>
+				</ul>	
+        </div>
+    </div>
+	<!-------- /Left Menu ----------->
+	
+    <!-------- Center Content -------->	
+    <div id="content">
+		<div id="content-list"><br><br>Listview...</div>
+		
+		<div data-role="popup" id="pop-lang"></div>	
+		<div data-role="popup" id="pop-about" data-position-to="window"></div>
+		
+ 	</div>
+	<!-------- /Center Content -------->
+    
+</div>
+<!---------------------------------- /List Page --------------------------------------->	
+
+
+
+</body>
+</html>

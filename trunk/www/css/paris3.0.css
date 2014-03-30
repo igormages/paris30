@@ -1,0 +1,20 @@
+aside {
+	border-radius: 20px 20px 20px 20px;
+	box-shadow: 8px 8px 6px black;
+}
+
+#map_canvas {
+		position: absolute;
+		top: 0;
+		bottom: 0;
+		left:0;
+		right:0;
+}
+
+.ui-panel-inner {
+	padding:0px;
+}
+.ui-controlgroup {
+	margin:0px;
+}
+
